@@ -155,7 +155,9 @@
       label: 'Faaliyet Alanları', icon: '🧩', endpoint: 'activity-areas',
       desc: 'Takımın çalışma alanları',
       columns: [
-        { key: 'icon', label: 'İkon', render: (r) => `<span style="font-size:1.3rem">${esc(r.icon || '—')}</span>` },
+        { key: 'icon', label: 'Logo', render: (r) => (r.image
+          ? `<img src="${esc(r.image)}" alt="" style="height:26px;width:auto;max-width:110px;object-fit:contain;vertical-align:middle;background:#fff;border-radius:6px;padding:2px 4px">`
+          : `<span style="font-size:1.3rem">${esc(r.icon || '—')}</span>`) },
         { key: 'title', label: 'Başlık', cls: 'cell-title' },
         { key: 'description', label: 'Açıklama', cls: 'truncate cell-muted' },
         { key: 'sort_order', label: 'Sıra' },
@@ -165,7 +167,7 @@
         { name: 'icon', label: 'İkon (emoji)', type: 'text', placeholder: '🛩️' },
         { name: 'sort_order', label: 'Sıra', type: 'number' },
         { name: 'description', label: 'Açıklama', type: 'textarea', full: true, rows: 3 },
-        { name: 'image', label: 'Görsel URL', type: 'text', full: true },
+        { name: 'image', label: 'Logo / Görsel URL', type: 'text', full: true, placeholder: '/assets/logos/tubitak.svg' },
       ],
     },
     careers: {
@@ -205,6 +207,26 @@
         { name: 'sort_order', label: 'Sıra', type: 'number' },
       ],
     },
+    gallery: {
+      label: 'Galeri', icon: '🖼️', endpoint: 'gallery',
+      desc: 'Fotoğraf galerisi',
+      columns: [
+        { key: 'image', label: 'Fotoğraf', render: (r) => (r.image
+          ? `<img src="${esc(r.image)}" alt="" style="height:44px;width:64px;object-fit:cover;border-radius:6px;vertical-align:middle">`
+          : '<span class="cell-muted">—</span>') },
+        { key: 'title', label: 'Başlık', cls: 'cell-title truncate' },
+        { key: 'caption', label: 'Açıklama', cls: 'truncate cell-muted' },
+        { key: 'sort_order', label: 'Sıra' },
+        { key: 'is_published', label: 'Durum', render: (r) => (r.is_published ? tag('Yayında', 'tag-green') : tag('Gizli', 'tag-mute')) },
+      ],
+      fields: [
+        { name: 'image', label: 'Fotoğraf', type: 'photo', required: true, full: true },
+        { name: 'title', label: 'Başlık', type: 'text', full: true },
+        { name: 'caption', label: 'Açıklama', type: 'textarea', full: true, rows: 2 },
+        { name: 'sort_order', label: 'Sıra', type: 'number' },
+        { name: 'is_published', label: 'Yayında', type: 'checkbox', default: true },
+      ],
+    },
   };
 
   const SETTINGS_FIELDS = [
@@ -233,6 +255,7 @@
       { key: 'activity-areas', label: 'Faaliyet Alanları', icon: '🧩' },
       { key: 'careers', label: 'Kariyer', icon: '💼' },
       { key: 'sponsors', label: 'Sponsorlar', icon: '🤝' },
+      { key: 'gallery', label: 'Galeri', icon: '🖼️' },
     ] },
     { group: 'Takım', items: [
       { key: 'members', label: 'Takım Üyeleri', icon: '👥' },
@@ -584,11 +607,81 @@
         return `<div class="${cls}"><label for="${id}">${esc(f.label)}${req}</label><input id="${id}" name="${f.name}" type="number" value="${esc(value == null ? '' : value)}"></div>`;
       case 'datetime':
         return `<div class="${cls}"><label for="${id}">${esc(f.label)}${req}</label><input id="${id}" name="${f.name}" type="datetime-local" value="${esc(toLocal(value))}"></div>`;
+      case 'photo': {
+        const v = value == null ? '' : String(value);
+        return `<div class="field full"><label for="${id}">${esc(f.label)}${req}</label>
+          <input type="hidden" id="${id}" name="${f.name}" value="${esc(v)}">
+          <div class="photo-picker">
+            <div class="photo-preview" id="${id}_prev">${v ? `<img src="${esc(v)}" alt="">` : '<span class="cell-muted">Fotoğraf seçilmedi</span>'}</div>
+            <div class="photo-actions">
+              <input type="file" accept="image/*" id="${id}_file" hidden>
+              <button type="button" class="btn btn-ghost btn-sm" data-photo-pick="${id}">📷 Fotoğraf Seç</button>
+              <button type="button" class="btn btn-ghost btn-sm" data-photo-clear="${id}">Kaldır</button>
+            </div>
+          </div>
+        </div>`;
+      }
       case 'specs':
         return ''; // ozel islenir
       default:
         return `<div class="${cls}"><label for="${id}">${esc(f.label)}${req}</label><input id="${id}" name="${f.name}" type="text" value="${esc(value == null ? '' : value)}"${ph}></div>`;
     }
+  }
+
+  /** Fotoğrafı oranını koruyarak küçültür ve JPEG data URL döner. */
+  function resizeImage(file, max) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+          const scale = Math.min(1, max / Math.max(width, height));
+          width = Math.max(1, Math.round(width * scale));
+          height = Math.max(1, Math.round(height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = () => reject(new Error('Görsel okunamadı.'));
+        img.src = reader.result;
+      };
+      reader.onerror = () => reject(new Error('Dosya okunamadı.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /** photo tipi alanları (dosya seçici + önizleme) bağlar. */
+  function bindPhotoFields(form, cfg) {
+    cfg.fields.filter((f) => f.type === 'photo').forEach((f) => {
+      const id = 'f_' + f.name;
+      const hidden = el(id);
+      const file = el(id + '_file');
+      const prev = el(id + '_prev');
+      const pick = qs(`[data-photo-pick="${id}"]`, form);
+      const clear = qs(`[data-photo-clear="${id}"]`, form);
+      if (pick && file) pick.addEventListener('click', () => file.click());
+      if (file) file.addEventListener('change', async () => {
+        const chosen = file.files && file.files[0];
+        if (!chosen) return;
+        try {
+          const dataUrl = await resizeImage(chosen, 1600);
+          hidden.value = dataUrl;
+          prev.innerHTML = `<img src="${esc(dataUrl)}" alt="">`;
+        } catch (e) { toast(e.message, 'error'); }
+        file.value = '';
+      });
+      if (clear) clear.addEventListener('click', () => {
+        hidden.value = '';
+        prev.innerHTML = '<span class="cell-muted">Fotoğraf seçilmedi</span>';
+      });
+    });
   }
 
   function specRowHtml(s) {
@@ -657,6 +750,7 @@
         if (e.target.classList.contains('spec-del')) e.target.closest('.spec-row').remove();
       });
     }
+    bindPhotoFields(el('entity-form'), cfg);
   }
 
   // ---------------------------------------------------------

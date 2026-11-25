@@ -16,6 +16,7 @@ const { initSchema, DB_PATH } = require('./src/db');
 const { seed } = require('./src/seed');
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
+const { mailEnabled } = require('./src/mailer');
 
 // Veritabani semasini kur ve tablolar bossa ornek veriyi yukle.
 initSchema();
@@ -24,7 +25,7 @@ seed();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '12mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // --- API rotalari ---
@@ -52,5 +53,11 @@ app.listen(PORT, () => {
   console.log(`  Site       : http://localhost:${PORT}`);
   console.log(`  Yonetim    : http://localhost:${PORT}/admin/`);
   console.log(`  Veritabani : ${DB_PATH}`);
+  console.log(`  E-posta    : ${mailEnabled ? 'SMTP aktif' : 'TEST MODU (e-posta gonderilmiyor)'}`);
   console.log('==============================================');
+  if (!mailEnabled) {
+    console.warn('  [UYARI] SMTP ayarlari bulunamadi. Dogrulama ve sifre sifirlama');
+    console.warn('          kodlari e-posta ile GONDERILMEZ, sadece bu konsola yazilir.');
+    console.warn('          Cozum: .env dosyasini proje kokune yukleyin (SMTP_USER/SMTP_PASS).');
+  }
 });

@@ -539,6 +539,7 @@
       ],
     },
     { href: '/arac', label: 'İHA’mız', page: 'arac' },
+    { href: '/galeri', label: 'Galeri', page: 'galeri' },
     {
       href: '/haberler', label: 'Haberler', page: 'haberler',
       children: [
@@ -871,7 +872,7 @@
       if (activities && activities.length) {
         actGrid.innerHTML = activities.slice(0, 6).map((a) => `
           <article class="card">
-            <div class="card-icon">${esc(a.icon || '🛠️')}</div>
+            ${activityMedia(a)}
             <h3>${esc(a.title)}</h3>
             ${a.description ? `<p>${esc(a.description)}</p>` : ''}
           </article>`).join('');
@@ -1212,6 +1213,14 @@
   // ---------------------------------------------------------
   // SAYFA: Faaliyet alanlari
   // ---------------------------------------------------------
+  /** Faaliyet alani icin logo gorseli, yoksa emoji ikon uretir. */
+  function activityMedia(a) {
+    if (a && a.image) {
+      return `<div class="card-logo"><img src="${esc(a.image)}" alt="${esc(a.title)}" loading="lazy"></div>`;
+    }
+    return `<div class="card-icon">${esc((a && a.icon) || '🛠️')}</div>`;
+  }
+
   async function initActivities() {
     const grid = el('activity-grid');
     if (!grid) return;
@@ -1220,7 +1229,7 @@
     try { items = await api('/activity-areas'); } catch (e) { return emptyState(grid); }
     grid.innerHTML = items.length ? items.map((a) => `
       <article class="card">
-        <div class="card-icon" style="font-size:2rem">${esc(a.icon || '🛠️')}</div>
+        ${activityMedia(a)}
         <h3>${esc(a.title)}</h3>
         <p>${esc(a.description || '')}</p>
       </article>`).join('') : '<div class="state">Faaliyet alanı eklenmemiş.</div>';
@@ -1316,6 +1325,55 @@
     wrap.innerHTML = order.filter((t) => groups[t]).map((tier) => `
       <div class="tier-title"><span class="tag ${tagClass(tier)}">${esc(tier)}</span><span style="color:var(--text-dim);font-weight:600">${groups[tier].length} sponsor</span></div>
       <div class="grid grid-4">${groups[tier].map(sponsorCard).join('')}</div>`).join('');
+  }
+
+  // ---------------------------------------------------------
+  // SAYFA: Galeri
+  // ---------------------------------------------------------
+  async function initGallery() {
+    const grid = el('gallery-grid');
+    if (!grid) return;
+    skeletons(grid, 6);
+    let items;
+    try { items = await api('/gallery'); } catch (e) { return emptyState(grid); }
+    if (!items.length) return emptyState(grid, 'Henüz fotoğraf eklenmemiş.');
+
+    grid.innerHTML = items.map((g) => `
+      <figure class="gallery-item" data-src="${esc(g.image)}" data-title="${esc(g.title || '')}">
+        <img src="${esc(g.image)}" alt="${esc(g.title || 'Galeri fotoğrafı')}" loading="lazy">
+        ${(g.title || g.caption) ? `<figcaption>${g.title ? `<b>${esc(g.title)}</b>` : ''}${g.caption ? `<span>${esc(g.caption)}</span>` : ''}</figcaption>` : ''}
+      </figure>`).join('');
+
+    grid.addEventListener('click', (ev) => {
+      const item = ev.target.closest('.gallery-item');
+      if (item) openLightbox(item.dataset.src, item.dataset.title);
+    });
+  }
+
+  /** Fotografi buyuterek gosteren katman. */
+  function openLightbox(src, title) {
+    if (!src) return;
+    const box = document.createElement('div');
+    box.className = 'lightbox';
+    box.innerHTML = `
+      <button class="lightbox-close" type="button" aria-label="Kapat">&times;</button>
+      <figure>
+        <img src="${esc(src)}" alt="${esc(title || '')}">
+        ${title ? `<figcaption>${esc(title)}</figcaption>` : ''}
+      </figure>`;
+    document.body.appendChild(box);
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    function close() {
+      box.remove();
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+    }
+    box.addEventListener('click', (e) => {
+      if (e.target === box || e.target.classList.contains('lightbox-close')) close();
+    });
+    document.addEventListener('keydown', onKey);
+    requestAnimationFrame(() => box.classList.add('open'));
   }
 
   // ---------------------------------------------------------
@@ -2204,6 +2262,7 @@
   const PAGES = {
     home: initHome, takim: initTeam, arac: initVehicle, haberler: initNewsList,
     haber: initNewsDetail, duyurular: initAnnouncements, faaliyetler: initActivities,
+    galeri: initGallery,
     kariyer: initCareers, sponsorlar: initSponsors, iletisim: initContact,
     giris: initLogin, kayit: initRegister, hesabim: initAccount,
   };

@@ -193,6 +193,18 @@ router.get('/activity-areas', (req, res) => {
 });
 
 // ------------------------------------------------------------
+// Fotograf galerisi (yalnizca yayinda olanlar)
+// ------------------------------------------------------------
+router.get('/gallery', (req, res) => {
+  res.json(all(
+    `SELECT id, title, caption, image, created_at
+       FROM gallery
+      WHERE is_published = 1
+      ORDER BY sort_order ASC, id DESC`
+  ));
+});
+
+// ------------------------------------------------------------
 // Kariyer ilanlari
 // ------------------------------------------------------------
 router.get('/careers', (req, res) => {

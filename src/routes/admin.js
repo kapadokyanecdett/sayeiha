@@ -172,6 +172,12 @@ const RESOURCES = {
     required: ['name'],
     order: 'sort_order ASC, id ASC',
   },
+  gallery: {
+    table: 'gallery',
+    fields: ['title', 'caption', 'image', 'sort_order', 'is_published'],
+    required: ['image'],
+    order: 'sort_order ASC, id DESC',
+  },
 };
 
 function buildSlug(cfg, body, excludeId) {
@@ -427,7 +433,7 @@ const DB_TABLES = [
   'users', 'email_verifications', 'password_resets', 'messages', 'career_applications',
   'members', 'vehicles', 'vehicle_specs', 'news', 'announcements',
   'activity_areas', 'careers', 'sponsors', 'settings', 'admins', 'audit_log',
-  'subscribers', 'comments', 'reactions', 'favorites',
+  'subscribers', 'comments', 'reactions', 'favorites', 'gallery',
 ];
 
 // Bu kolonlar arayuzde maskelenir ve yazma islemlerinde yok sayilir.

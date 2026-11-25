@@ -171,6 +171,20 @@ CREATE TABLE IF NOT EXISTS sponsors (
 );
 
 -- ------------------------------------------------------------
+-- Fotoğraf galerisi
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS gallery (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  title        TEXT,
+  caption      TEXT,
+  image        TEXT NOT NULL,                     -- data URL (kucultulmus JPEG)
+  sort_order   INTEGER NOT NULL DEFAULT 0,
+  is_published INTEGER NOT NULL DEFAULT 1,        -- 0: gizli, 1: yayinda
+  created_at   TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_gallery_order ON gallery(sort_order, id DESC);
+
+-- ------------------------------------------------------------
 -- Uye hesaplari (kayit / giris sistemi)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
