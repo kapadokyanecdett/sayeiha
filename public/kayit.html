@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kayıt Ol | SAYE</title>
+  <meta name="description" content="SAYE ekibine katıl: hesap oluştur.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 2 20l10-4 10 4z' fill='%232f7bff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/theme.js"></script>
+</head>
+<body data-page="kayit">
+  <div id="site-header"></div>
+
+  <main>
+    <header class="page-header">
+      <div class="container">
+        <div class="eyebrow">Hesap</div>
+        <h1>Kayıt Ol</h1>
+      </div>
+    </header>
+
+    <section class="section-sm">
+      <div class="container">
+        <div class="auth-wrap">
+          <div class="card auth-card">
+            <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:20px">Aşağıdaki bilgileri doldurarak ekibe katıl. Kayıt otomatik olarak sistemimize kaydedilir.</p>
+            <div class="auth-alert-box alert hidden" style="margin-bottom:16px"></div>
+            <form id="register-form" class="form-grid" novalidate>
+              <div class="field">
+                <label for="r-first">Adı <span class="req">*</span></label>
+                <input id="r-first" name="first_name" type="text" required autocomplete="given-name" placeholder="Adınız">
+              </div>
+              <div class="field">
+                <label for="r-last">Soyadı <span class="req">*</span></label>
+                <input id="r-last" name="last_name" type="text" required autocomplete="family-name" placeholder="Soyadınız">
+              </div>
+              <div class="field full">
+                <label for="r-username">Kullanıcı Adı <span class="req">*</span></label>
+                <input id="r-username" name="username" type="text" required autocomplete="username" placeholder="kullanici_adi (3-24 karakter)">
+              </div>
+              <div class="field full">
+                <label for="r-email">E-posta <span class="req">*</span></label>
+                <input id="r-email" name="email" type="email" required autocomplete="email" placeholder="ornek@eposta.com">
+              </div>
+              <div class="field full">
+                <label for="r-password">Şifre <span class="req">*</span></label>
+                <input id="r-password" name="password" type="password" required autocomplete="new-password" placeholder="En az 6 karakter">
+              </div>
+              <div class="field">
+                <label for="r-age">Yaş <span class="req">*</span></label>
+                <input id="r-age" name="age" type="number" min="10" max="99" required placeholder="Örn. 18">
+              </div>
+              <div class="field">
+                <label for="r-department">Birim <span class="req">*</span></label>
+                <select id="r-department" name="department" required>
+                  <option value="">Birim seçin</option>
+                  <option value="Yazılım">Yazılım</option>
+                  <option value="Mekanik">Mekanik</option>
+                  <option value="Elektronik">Elektronik</option>
+                  <option value="Tasarım">Tasarım</option>
+                  <option value="Medya">Medya</option>
+                  <option value="Yönetim">Yönetim</option>
+                </select>
+              </div>
+              <div class="field full">
+                <button class="btn btn-primary" type="submit" style="width:100%">Kayıt Ol</button>
+                <span class="form-note">* ile işaretli alanlar zorunludur.</span>
+              </div>
+            </form>
+            <p class="auth-alt">Zaten hesabın var mı? <a href="/giris">Giriş yap</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/js/site.js"></script>
+</body>
+</html>

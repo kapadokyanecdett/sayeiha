@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>İletişim | SAYE</title>
+  <meta name="description" content="SAYE takımı ile iletişime geçin: sponsorluk, iş birliği ve sorularınız için.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 2 20l10-4 10 4z' fill='%232f7bff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/theme.js"></script>
+</head>
+<body data-page="iletisim">
+  <div id="site-header"></div>
+
+  <main>
+    <header class="page-header">
+      <div class="container">
+        <div class="eyebrow">İletişim</div>
+        <h1>Bize Ulaşın</h1>
+      </div>
+    </header>
+
+    <section class="section-sm">
+      <div class="container split">
+        <div class="card" style="padding:28px">
+          <h2 style="font-size:1.3rem;margin-bottom:6px">Mesaj Gönderin</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem">En kısa sürede size dönüş yapacağız.</p>
+          <div id="contact-alert" class="alert hidden" style="margin-bottom:16px"></div>
+          <form id="contact-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="c-name">Ad Soyad <span class="req">*</span></label>
+              <input id="c-name" name="name" type="text" required placeholder="Adınız Soyadınız">
+            </div>
+            <div class="field">
+              <label for="c-email">E-posta <span class="req">*</span></label>
+              <input id="c-email" name="email" type="email" required placeholder="ornek@eposta.com">
+            </div>
+            <div class="field">
+              <label for="c-phone">Telefon</label>
+              <input id="c-phone" name="phone" type="tel" placeholder="+90 5xx xxx xx xx">
+            </div>
+            <div class="field">
+              <label for="c-subject">Konu</label>
+              <input id="c-subject" name="subject" type="text" placeholder="Konu başlığı">
+            </div>
+            <div class="field full">
+              <label for="c-message">Mesajınız <span class="req">*</span></label>
+              <textarea id="c-message" name="message" required placeholder="Mesajınızı yazın..."></textarea>
+            </div>
+            <div class="field full">
+              <button class="btn btn-primary" type="submit" style="width:100%">Mesajı Gönder</button>
+              <span class="form-note">* ile işaretli alanlar zorunludur.</span>
+            </div>
+          </form>
+        </div>
+
+        <aside>
+          <div class="card" style="padding:28px;margin-bottom:20px">
+            <h3 style="font-size:1.05rem">İletişim Bilgileri</h3>
+            <div id="contact-info"></div>
+          </div>
+          <div class="card" style="padding:28px">
+            <h3 style="font-size:1.05rem">Sponsorluk & İş Birliği</h3>
+            <p>Kurumsal iş birliği ve sponsorluk paketlerimiz hakkında bilgi almak için konu alanına
+              "Sponsorluk" yazarak bize ulaşabilirsiniz.</p>
+            <a class="btn btn-ghost btn-sm" href="/sponsorlar" style="margin-top:8px">Sponsorluk sayfası →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/js/site.js"></script>
+</body>
+</html>

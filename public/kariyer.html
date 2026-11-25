@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kariyer | SAYE</title>
+  <meta name="description" content="SAYE takımı açık pozisyonları ve başvuru formu.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 2 20l10-4 10 4z' fill='%232f7bff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/theme.js"></script>
+</head>
+<body data-page="kariyer">
+  <div id="site-header"></div>
+
+  <main>
+    <header class="page-header">
+      <div class="container">
+        <div class="eyebrow">Kariyer</div>
+        <h1>Takımımıza Katıl</h1>
+      </div>
+    </header>
+
+    <section class="section-sm">
+      <div class="container split">
+        <div>
+          <h2 style="font-size:1.35rem;margin-bottom:18px">Açık Pozisyonlar</h2>
+          <div id="career-list"></div>
+        </div>
+
+        <aside>
+          <div class="card article-aside" style="padding:26px">
+            <h2 style="font-size:1.25rem;margin-bottom:6px">Başvuru Formu</h2>
+            <p style="color:var(--text-muted);font-size:0.9rem">Bilgilerini doldur, seninle iletişime geçelim.</p>
+            <div id="career-alert" class="alert hidden" style="margin-bottom:16px"></div>
+            <form id="career-form" class="form-grid" style="grid-template-columns:1fr" novalidate>
+              <div class="field full">
+                <label for="career_id">Başvurulan Pozisyon</label>
+                <select id="career_id" name="career_id">
+                  <option value="">Genel başvuru</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="full_name">Ad Soyad <span class="req">*</span></label>
+                <input id="full_name" name="full_name" type="text" required placeholder="Adınız Soyadınız">
+              </div>
+              <div class="field full">
+                <label for="email">E-posta <span class="req">*</span></label>
+                <input id="email" name="email" type="email" required placeholder="ornek@eposta.com">
+              </div>
+              <div class="field full">
+                <label for="phone">Telefon</label>
+                <input id="phone" name="phone" type="tel" placeholder="+90 5xx xxx xx xx">
+              </div>
+              <div class="field full">
+                <label for="university">Üniversite</label>
+                <input id="university" name="university" type="text" placeholder="Üniversite adı">
+              </div>
+              <div class="field full">
+                <label for="department">Bölüm</label>
+                <input id="department" name="department" type="text" placeholder="Bölümünüz">
+              </div>
+              <div class="field full">
+                <label for="cv_url">CV / Portfolyo Bağlantısı</label>
+                <input id="cv_url" name="cv_url" type="url" placeholder="https://...">
+              </div>
+              <div class="field full">
+                <label for="message">Kısa Tanıtım / Not</label>
+                <textarea id="message" name="message" placeholder="Kendinden ve ilgi alanlarından kısaca bahset."></textarea>
+              </div>
+              <div class="field full">
+                <button class="btn btn-primary" type="submit" style="width:100%">Başvuruyu Gönder</button>
+                <span class="form-note">* ile işaretli alanlar zorunludur. Bilgileriniz yalnızca başvuru değerlendirmesi için kullanılır.</span>
+              </div>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/js/site.js"></script>
+</body>
+</html>
